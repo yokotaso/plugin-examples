@@ -3,8 +3,8 @@
     "version": 2,
     "type": "APP",
     "name": {
-        "ja": "自動採番プラグイン",
-        "en": "Auto-numbering plug-in"
+        "ja": "自動採番プラグイン(初期値 カスタマイズ)",
+        "en": "Auto-numbering plug-in(Numbering Initial number Customize)"
     },
     "description": {
         "ja": "保存時に自動採番するプラグインです。",

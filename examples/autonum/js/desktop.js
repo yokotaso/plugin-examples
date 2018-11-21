@@ -59,7 +59,7 @@
                 this.settings.config.plugin['format3']
             ];
             this.settings.config.NUM_OF_DIGIT = parseInt(this.settings.config.plugin['numOfDigit'], 10);
-
+            this.settings.config.NUM_OF_START = parseInt(this.settings.config.plugin['numOfStart'], 10);
             this.kintoneEvents();
         },
         kintoneEvents: function() {
@@ -76,7 +76,7 @@
             kintone.events.on(this.settings.events.onSubmit, function(event) {
 
                 var record = event.record;
-                var NUMBERING_DEFAULT = 1;
+                var NUMBERING_DEFAULT = self.settings.config.NUM_OF_START;
 
                 var query = 'order by $id desc limit 1';
                 return self.apiRequest(query).then(function(respdata) {
@@ -208,7 +208,7 @@
             if (number.toString().length >= this.settings.config.NUM_OF_DIGIT) {
                 return number;
             }
-            return (new Array(this.settings.config.NUM_OF_DIGIT).join('0') + number)
+            return (new Array(this.settings.config.NUM_OF_DIGIT).join('0') + (number))
                 .slice(-1 * this.settings.config.NUM_OF_DIGIT);
         },
         timingIsDateReset: function(before, after) {

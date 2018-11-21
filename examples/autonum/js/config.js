@@ -41,6 +41,7 @@
                     underscore: { 'value': '_', 'text': 'アンダースコア( _ )' }
                 },
                 numberingOfDigits: '採番の桁数',
+                numberingOfStart: '採番の開始番号',
                 resetTiming: '連番リセットタイミング選択',
                 typeOfResetTiming: {
                     none: 'なし',
@@ -59,6 +60,7 @@
                     notSelectedDateFormat: '日付形式が選択されていません',
                     notInputTextFormat: 'テキストが入力されていません',
                     invalidNumberingOfDigits: '採番の桁数に正の整数を入力してください',
+                    invalidNumberingOfStart: '採番の開始は整数値を指定してください',
                     canNotUseConnectionCharForTextFormat: 'テキストに接続語(-, _)を\n入力することはできません',
                     canNotUseHTMLCharactersForTextFormat: 'テキストにHTML特殊文字(&, <, >, \', ")を\n入力することはできません',
                     apiTokenInvalid: 'APIトークンに正しい権限が設定されていません'
@@ -96,6 +98,7 @@
                     underscore: { 'value': '_', 'text': 'Underscore ( _ )' }
                 },
                 numberingOfDigits: 'Number of digits for Numbering',
+                numberingOfStart: 'Number of start for Numbering',
                 resetTiming: 'Reset timing for Numbering',
                 typeOfResetTiming: {
                     none: 'Never',
@@ -114,6 +117,7 @@
                     notSelectedDateFormat: 'Select a Date format',
                     notInputTextFormat: 'Input a Text format',
                     invalidNumberingOfDigits: 'Input a positive number for Number of digits',
+                    invalidNumberingOfStart: 'Input a positive number for Number of start',
                     canNotUseConnectionCharForTextFormat: 'Connectors(-, _) cannot be used for Text format',
                     canNotUseHTMLCharactersForTextFormat: '&, <, >, \', " cannot be used for Text format',
                     apiTokenInvalid: 'The API token does not have the correct permission'
@@ -137,6 +141,7 @@
                     preview: '#autonum-preview',
                     apiToken: '#autonum-api-token',
                     numberOfDigit: '#autonum-number-of-digit',
+                    numberOfStart: '#autonum-number-of-start',
                     textFormatSelect: '#autonum-textFormat-select',
                     dateFormatSelect: '#autonum-dateFormat-select',
                     connectiveSelect: '#autonum-connective-select'
@@ -219,6 +224,7 @@
             $(this.settings.element.input.timing).val([conf['timing']]);
             $(this.settings.element.input.apiToken).val(apiToken);
             $(this.settings.element.input.numberOfDigit).val(conf['numOfDigit']);
+            $(this.settings.element.input.numberOfStart).val(conf['numOfStart']);
             this.checkAutonumFormat();
         },
         listenAction: function() {
@@ -339,6 +345,7 @@
 
             var connective = $(this.settings.element.input.connectiveSelect).val();
             var numOfDigit = $(this.settings.element.input.numberOfDigit).val();
+            var numOfStart = $(this.settings.element.input.numberOfStart).val();
             var validateResult = true;
             $('.kintoneplugin-alert').remove();
 
@@ -355,6 +362,19 @@
                 numOfDigit = parseInt(numOfDigit, 10);
                 $(this.settings.element.input.numberOfDigit).val(numOfDigit);
             }
+
+            if(!numOfStart && numOfStart === '') {
+                numOfStart = 1;
+                $(this.settings.element.input.numberOfStart).val(numOfStart);
+            } else if(!this.isNumberPositive(numOfStart)) {
+                this.alert(this.settings.element.input.numberOfStart,
+                    this.settings.i18n.alertMessage.invalidNumberingOfStart);
+                validateResult = false;
+            } else {
+                numOfStart = parseInt(numOfStart, 10);
+                $(this.settings.element.input.numberOfStart).val(numOfStart);
+            }
+
             // 採番書籍選択未選択チェック
             if (format[0] === 'null') {
                 this.alert(this.settings.element.input.textFormatSelect,
@@ -406,6 +426,7 @@
             config['connective'] = connective;
             config['useProxy'] = $(this.settings.element.input.apiToken).val() !== '' ? '1' : '0';
             config['numOfDigit'] = numOfDigit.toString();
+            config['numOfStart'] = numOfStart.toString();
             return config;
         },
         alert: function(element, mess) {
